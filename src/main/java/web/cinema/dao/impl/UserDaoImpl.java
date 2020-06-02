@@ -28,7 +28,7 @@ public class UserDaoImpl implements UserDao {
             transaction = session.beginTransaction();
             session.save(user);
             transaction.commit();
-            LOGGER.info("user was succeed added to the db");
+            LOGGER.info("user was successfully added to the db");
             return user;
         } catch (Exception e) {
             if (transaction != null) {
@@ -44,19 +44,13 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public List<User> getAll() {
-        Session session = null;
-        try {
-            session = sessionFactory.openSession();
+        try (Session session = sessionFactory.openSession()) {
             CriteriaQuery<User> criteriaQuery = session
                     .getCriteriaBuilder().createQuery(User.class);
             criteriaQuery.from(User.class);
             return session.createQuery(criteriaQuery).getResultList();
         } catch (Exception e) {
             throw new RuntimeException("Can`t get All users ", e);
-        } finally {
-            if (session != null) {
-                session.close();
-            }
         }
     }
 }
