@@ -1,7 +1,6 @@
 package web.cinema.dao.impl;
 
 import java.util.List;
-import java.util.Optional;
 import javax.persistence.criteria.CriteriaQuery;
 import org.apache.log4j.Logger;
 import org.hibernate.Session;
