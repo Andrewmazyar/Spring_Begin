@@ -1,11 +1,13 @@
 package web.cinema.dao.impl;
 
 import java.util.List;
+import java.util.Optional;
 import javax.persistence.criteria.CriteriaQuery;
 import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.hibernate.query.Query;
 import org.springframework.stereotype.Repository;
 import web.cinema.dao.UserDao;
 import web.cinema.models.User;
@@ -51,6 +53,30 @@ public class UserDaoImpl implements UserDao {
             return session.createQuery(criteriaQuery).getResultList();
         } catch (Exception e) {
             throw new RuntimeException("Can`t get All users ", e);
+        }
+    }
+
+    @Override
+    public User get(Long id) {
+        Transaction transaction = null;
+        Session session = null;
+        try {
+            session = sessionFactory.openSession();
+            transaction = session.beginTransaction();
+            Query query = session.createQuery("from User where id = :id");
+            query.setParameter("id", id);
+            User user = (User) query.uniqueResult();
+            transaction.commit();
+            return user;
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            throw new RuntimeException("Cant get user by email", e);
+        } finally {
+            if (session != null) {
+                session.close();
+            }
         }
     }
 }

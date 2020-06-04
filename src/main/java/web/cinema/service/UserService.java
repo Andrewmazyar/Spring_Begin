@@ -7,4 +7,6 @@ public interface UserService {
     void add(User user);
 
     List<User> listUsers();
+
+    public User get(Long id);
 }
