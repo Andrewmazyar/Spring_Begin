@@ -1,7 +1,7 @@
 package web.cinema.controllers;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -43,23 +43,21 @@ public class UserController {
 
     @GetMapping("/{userId}")
     public UserResponseDto get(@PathVariable String userId) {
-        UserResponseDto dto = new UserResponseDto();
-        User user = userService.get(Long.valueOf(userId));
-        dto.setEmail(user.getEmail());
-        dto.setPassword(user.getPassword());
-        return dto;
+        return convertUserToDto(userService.get(Long.valueOf(userId)));
     }
 
     @RequestMapping
     public List<UserResponseDto> getAll() {
-        List<User> users = userService.listUsers();
-        List<UserResponseDto> usersDto = new ArrayList<>();
-        for (User u : users) {
-            UserResponseDto userResponseDto = new UserResponseDto();
-            userResponseDto.setEmail(u.getEmail());
-            userResponseDto.setPassword(u.getPassword());
-            usersDto.add(userResponseDto);
-        }
-        return usersDto;
+        return userService.listUsers()
+                .stream()
+                .map(this::convertUserToDto)
+                .collect(Collectors.toList());
+    }
+
+    private UserResponseDto convertUserToDto(User user) {
+        UserResponseDto dto = new UserResponseDto();
+        dto.setEmail(user.getEmail());
+        dto.setPassword(user.getPassword());
+        return dto;
     }
 }
