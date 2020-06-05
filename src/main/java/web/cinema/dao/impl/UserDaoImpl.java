@@ -62,7 +62,7 @@ public class UserDaoImpl implements UserDao {
             query.setParameter("id", id);
             return (User) query.uniqueResult();
         } catch (Exception e) {
-            throw new RuntimeException("Cant get user by email", e);
+            throw new RuntimeException("Cant get user by id", e);
         }
     }
 }
