@@ -6,6 +6,7 @@ import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.hibernate.query.Query;
 import org.springframework.stereotype.Repository;
 import web.cinema.dao.UserDao;
 import web.cinema.models.User;
@@ -51,6 +52,17 @@ public class UserDaoImpl implements UserDao {
             return session.createQuery(criteriaQuery).getResultList();
         } catch (Exception e) {
             throw new RuntimeException("Can`t get All users ", e);
+        }
+    }
+
+    @Override
+    public User get(Long id) {
+        try (Session session = sessionFactory.openSession()) {
+            Query query = session.createQuery("from User where id = :id");
+            query.setParameter("id", id);
+            return (User) query.uniqueResult();
+        } catch (Exception e) {
+            throw new RuntimeException("Cant get user by id", e);
         }
     }
 }
