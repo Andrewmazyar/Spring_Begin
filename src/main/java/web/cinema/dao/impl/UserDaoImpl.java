@@ -58,9 +58,7 @@ public class UserDaoImpl implements UserDao {
     @Override
     public User get(Long id) {
         try (Session session = sessionFactory.openSession()) {
-            Query query = session.createQuery("from User where id = :id");
-            query.setParameter("id", id);
-            return (User) query.uniqueResult();
+            return session.get(User.class, id);
         } catch (Exception e) {
             throw new RuntimeException("Cant get user by id", e);
         }
